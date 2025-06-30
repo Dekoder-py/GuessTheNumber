@@ -1,0 +1,117 @@
+name: Build EXE and macOS App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest, macos-latest ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Download JavaFX JMODs
+        run: |
+          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_${{ matrix.os == 'windows-latest' && 'windows' || 'macos' }}-x64_bin-jmods.zip
+          unzip javafx.zip -d javafx
+        shell: bash
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Create custom JRE with jlink
+        run: |
+          jlink \
+            --module-path "$JAVA_HOME/jmods:javafx/javafx-jmods-21.0.7" \
+            --add-modules java.base,java.logging,javafx.base,javafx.controls,javafx.fxml \
+            --output custom-jre \
+            --compress=2 \
+            --no-header-files \
+            --no-man-pages
+        shell: bash
+
+      - name: Package app image with jpackage
+        run: |
+          jpackage \
+            --type app-image \
+            --input target \
+            --name GuessTheNumber \
+            --main-jar GuessTheNumber-1.0.2.jar \
+            --main-class co.dekoderpy.guessthenumber.MainApplication \
+            --runtime-image custom-jre
+        shell: bash
+
+      - name: Zip app image
+        run: |
+          zip -r GuessTheNumber-${{ runner.os }}.zip GuessTheNumber
+        shell: bash
+
+      - name: Upload platform artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GuessTheNumber-${{ runner.os }}
+          path: GuessTheNumber-${{ runner.os }}.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GuessTheNumber-Windows
+          path: windows/
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GuessTheNumber-macOS
+          path: macos/
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Windows ZIP
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: windows/GuessTheNumber-Windows.zip
+          asset_name: GuessTheNumber-Windows.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS ZIP
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: macos/GuessTheNumber-macOS.zip
+          asset_name: GuessTheNumber-macOS.zip
+          asset_content_type: application/zip
