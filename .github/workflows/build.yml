@@ -27,10 +27,16 @@ jobs:
 
       - name: Download JavaFX JMODs
         run: |
-          ARCH_SUFFIX="${{ matrix.os == 'macos-latest' && 'aarch64' || 'windows-x64' }}"
-          curl -L -o javafx.zip "https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_${ARCH_SUFFIX}_bin-jmods.zip"
+          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            JMOD_URL="https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_osx-aarch64_bin-jmods.zip"
+          else
+            JMOD_URL="https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_windows-x64_bin-jmods.zip"
+          fi
+
+          curl -L -o javafx.zip "$JMOD_URL"
           unzip javafx.zip -d javafx
         shell: bash
+      
 
 
       - name: Build with Maven
