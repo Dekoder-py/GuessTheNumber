@@ -93,8 +93,7 @@ jobs:
             --name GuessTheNumber \
             --main-jar GuessTheNumber-1.0.2.jar \
             --main-class co.dekoderpy.guessthenumber.MainApplication \
-            --runtime-image custom-jre \
-            --target-arch aarch64
+            --runtime-image custom-jre
 
 
 
@@ -107,7 +106,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           ditto -c -k --sequesterRsrc --keepParent "GuessTheNumber.app" "GuessTheNumber-macOS.zip"
-      
+
 
       - name: Upload platform artifact
         uses: actions/upload-artifact@v4
