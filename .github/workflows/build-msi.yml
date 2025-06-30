@@ -37,6 +37,7 @@ jobs:
             --compress=2 \ 
             --no-header-files \ 
             --no-man-pages
+        shell: bash
 
       - name: Package MSI with jpackage
         run: |
@@ -47,6 +48,8 @@ jobs:
             --main-jar GuessTheNumber-1.0.0.jar \ 
             --main-class co.dekoderpy.guessthenumber.MainApplication \ 
             --runtime-image custom-jre
+        shell: bash
+
 
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
