@@ -33,6 +33,7 @@ jobs:
         shell: cmd
         run: |
           set "JAVAFX_MODS=${{ github.workspace }}\javafx-jmods-21.0.7"
+          if exist custom-jre rmdir /s /q custom-jre
           jlink --module-path "%JAVA_HOME%\jmods;%JAVAFX_MODS%" ^
             --add-modules java.base,java.logging,javafx.base,javafx.controls,javafx.fxml ^
             --output custom-jre ^
