@@ -48,7 +48,7 @@ jobs:
             --type app-image ^
             --input target ^
             --name GuessTheNumber ^
-            --main-jar GuessTheNumber-1.0.0.jar ^
+            --main-jar GuessTheNumber-1.0.1.jar ^
             --main-class co.dekoderpy.guessthenumber.MainApplication ^
             --runtime-image custom-jre
 

@@ -18,4 +18,5 @@
     </HBox>
     <Label fx:id="resultDisplay"/>
     <Label fx:id="guessCountLabel"/>
+    <Button text="Restart" onAction="#restart"/>
 </VBox>

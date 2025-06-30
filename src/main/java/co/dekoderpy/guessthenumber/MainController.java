@@ -17,12 +17,22 @@ public class MainController {
     int guessCount = 0;
 
     @FXML
+    protected void restart() {
+        resultDisplay.setText("");
+        guessCount = 0;
+        guessCountLabel.setText("");
+        secretNumber = random.nextInt(100);
+        userGuess.setText("");
+    }
+
+    @FXML
     protected void onGuessSubmit() {
         int guess;
         try {
             guess = Integer.parseInt(userGuess.getText().strip());
         } catch (NumberFormatException e) {
             resultDisplay.setText("Please only enter whole numbers.");
+            userGuess.setText("");
             return;
         }
         guessCount++;
@@ -40,5 +50,5 @@ public class MainController {
         }
 
     }
-    
+
 }
