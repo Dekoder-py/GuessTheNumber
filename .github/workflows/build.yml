@@ -98,27 +98,27 @@ jobs:
       - name: Zip Windows App Folder
         if: matrix.os == 'windows-latest'
         run: |
-          Compress-Archive -Path GuessTheNumber\* -DestinationPath GuessTheNumberFX-Windows.zip
+          Compress-Archive -Path GuessTheNumber\* -DestinationPath GuessTheNumber-Windows.zip
 
       - name: Upload Windows ZIP as Artifact
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: GuessTheNumberFX-Windows
-          path: GuessTheNumberFX-Windows.zip
+          name: GuessTheNumber-Windows
+          path: GuessTheNumber-Windows.zip
 
       - name: Zip macOS .app Bundle
         if: matrix.os == 'macos-latest'
         run: |
-          zip -r GuessTheNumberFX-macOS.zip GuessTheNumber.app
-      
+          zip -r GuessTheNumber-macOS.zip GuessTheNumber.app
+
 
       - name: Upload macOS ZIP as Artifact
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: GuessTheNumberFX-macOS
-          path: GuessTheNumberFX-macOS.zip
+          name: GuessTheNumber-macOS
+          path: GuessTheNumber-macOS.zip
 
 
 
