@@ -36,7 +36,7 @@ jobs:
           curl -L -o javafx.zip "$JMOD_URL"
           unzip javafx.zip -d javafx
         shell: bash
-      
+
 
 
       - name: Build with Maven
@@ -66,7 +66,7 @@ jobs:
 
       - name: Zip app image
         run: |
-          zip -r GuessTheNumber-${{ runner.os }}.zip GuessTheNumber
+          zip -r GuessTheNumber-${{ runner.os }}.zip . -i GuessTheNumber
         shell: bash
 
       - name: Upload platform artifact
