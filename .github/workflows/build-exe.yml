@@ -56,5 +56,5 @@ jobs:
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GuessTheNumber-EXE
-          path: GuessTheNumber-*.exe
+          name: GuessTheNumber
+          path: GuessTheNumber/**
