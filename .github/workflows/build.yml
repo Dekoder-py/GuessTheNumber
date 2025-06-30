@@ -97,11 +97,20 @@ jobs:
 
 
 
-      - name: Upload platform artifact
+      - name: Upload macOS artifact
+        if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: GuessTheNumber-${{ runner.os }}
-          path: GuessTheNumber-${{ runner.os }}
+          name: GuessTheNumber-macOS
+          path: GuessTheNumber.app
+
+      - name: Upload Windows artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GuessTheNumber-Windows
+          path: GuessTheNumber
+
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
