@@ -97,22 +97,11 @@ jobs:
 
 
 
-      - name: Zip Windows folder
-        if: runner.os == 'Windows'
-        run: |
-          powershell -Command "Compress-Archive -Path GuessTheNumber -DestinationPath GuessTheNumber-Windows.zip"
-
-      - name: Zip macOS .app
-        if: runner.os == 'macOS'
-        run: |
-          ditto -c -k --sequesterRsrc --keepParent "GuessTheNumber.app" "GuessTheNumber-macOS.zip"
-
-
       - name: Upload platform artifact
         uses: actions/upload-artifact@v4
         with:
           name: GuessTheNumber-${{ runner.os }}
-          path: GuessTheNumber-${{ runner.os }}.zip
+          path: GuessTheNumber-${{ runner.os }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
