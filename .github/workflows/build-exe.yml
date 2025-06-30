@@ -2,8 +2,10 @@ name: Build EXE
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
+#  push:
+#    branches: [ main ]
+#    tags:
+#      - 'v*'  # Runs release job on version tag push
 
 jobs:
   build-exe:
@@ -24,7 +26,6 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_windows-x64_bin-jmods.zip -OutFile javafx.zip
           Expand-Archive -Path javafx.zip -DestinationPath "${env:GITHUB_WORKSPACE}"
-
 
       - name: Build with Maven
         run: mvn clean package
@@ -52,9 +53,46 @@ jobs:
             --main-class co.dekoderpy.guessthenumber.MainApplication ^
             --runtime-image custom-jre
 
-
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: GuessTheNumber
           path: GuessTheNumber/**
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-exe
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GuessTheNumber
+          path: release/
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Zip artifact
+        run: |
+          cd release
+          zip -r ../GuessTheNumber.zip .
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./GuessTheNumber.zip
+          asset_name: GuessTheNumber.zip
+          asset_content_type: application/zip

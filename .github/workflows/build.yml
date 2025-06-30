@@ -27,9 +27,11 @@ jobs:
 
       - name: Download JavaFX JMODs
         run: |
-          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_${{ matrix.os == 'windows-latest' && 'windows' || 'macos' }}-x64_bin-jmods.zip
+          ARCH_SUFFIX="${{ matrix.os == 'macos-latest' && 'aarch64' || 'windows-x64' }}"
+          curl -L -o javafx.zip "https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_${ARCH_SUFFIX}_bin-jmods.zip"
           unzip javafx.zip -d javafx
         shell: bash
+
 
       - name: Build with Maven
         run: mvn clean package
