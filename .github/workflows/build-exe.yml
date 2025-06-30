@@ -41,16 +41,16 @@ jobs:
             --no-header-files ^
             --no-man-pages
 
-      - name: Package EXE with jpackage
+      - name: Package app image with jpackage
+        shell: cmd
         run: |
-          jpackage \
-            --type exe \
-            --input target \
-            --name GuessTheNumber \
-            --main-jar GuessTheNumber-1.0.0.jar \
-            --main-class co.dekoderpy.guessthenumber.MainApplication \
+          jpackage ^
+            --type app-image ^
+            --input target ^
+            --name GuessTheNumber ^
+            --main-jar GuessTheNumber-1.0.0.jar ^
+            --main-class co.dekoderpy.guessthenumber.MainApplication ^
             --runtime-image custom-jre
-        shell: bash
 
 
       - name: Upload EXE artifact
