@@ -21,7 +21,7 @@ jobs:
 
       - name: Download JavaFX SDK
         run: |
-          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_windows-x64_bin-sdk.zip
+          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/21.0.7/openjfx-21.0.7_windows-x64_bin-jmods.zip
           unzip javafx.zip -d ${{ github.workspace }}
         shell: bash
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Create custom JRE with jlink
         run: |
-          $JAVAFX_MODS="${{ github.workspace }}/javafx-sdk-21.0.7/lib"
+          $JAVAFX_MODS="${{ github.workspace }}/javafx-jmods-21.0.7/"
           jlink --module-path "%JAVA_HOME%/jmods;$JAVAFX_MODS" \ 
             --add-modules java.base,java.logging,javafx.base,javafx.controls,javafx.fxml \ 
             --output custom-jre \ 
