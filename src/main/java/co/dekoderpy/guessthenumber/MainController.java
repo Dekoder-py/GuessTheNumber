@@ -48,6 +48,7 @@ public class MainController {
         } else {  // guess > secretNumber
             resultDisplay.setText("The number is smaller than " + guess + ".");
         }
+        userGuess.setText("");
 
     }
 
