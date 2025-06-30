@@ -98,7 +98,7 @@ jobs:
       - name: Zip Windows App Folder
         if: matrix.os == 'windows-latest'
         run: |
-          Compress-Archive -Path dist\* -DestinationPath GuessTheNumberFX-Windows.zip
+          Compress-Archive -Path GuessTheNumber\* -DestinationPath GuessTheNumberFX-Windows.zip
 
       - name: Upload Windows ZIP as Artifact
         if: matrix.os == 'windows-latest'
@@ -110,9 +110,8 @@ jobs:
       - name: Zip macOS .app Bundle
         if: matrix.os == 'macos-latest'
         run: |
-          cd dist
-          zip -r ../GuessTheNumberFX-macOS.zip GuessTheNumberFX.app
-          cd ..
+          zip -r GuessTheNumberFX-macOS.zip GuessTheNumber.app
+      
 
       - name: Upload macOS ZIP as Artifact
         if: matrix.os == 'macos-latest'
