@@ -19,4 +19,5 @@
     <Label fx:id="resultDisplay"/>
     <Label fx:id="guessCountLabel"/>
     <Button text="Restart" onAction="#restart"/>
+    <Label fx:id="caption" text="App by Dekoder-py" alignment="BOTTOM_CENTER"/>
 </VBox>

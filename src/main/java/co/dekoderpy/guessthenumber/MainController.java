@@ -12,6 +12,7 @@ public class MainController {
     public Label resultDisplay;
     public Label subheader;
     public Label guessCountLabel;
+    public Label caption;
     Random random = new Random();
     int secretNumber = random.nextInt(100);
     int guessCount = 0;

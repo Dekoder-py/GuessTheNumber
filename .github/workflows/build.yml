@@ -75,25 +75,29 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: cmd
         run: |
+          FOR /F %%F IN ('dir /b /a:-d target\\GuessTheNumber-*.jar') DO set MAIN_JAR=%%F
           jpackage ^
             --type app-image ^
             --input target ^
             --name GuessTheNumber ^
-            --main-jar GuessTheNumber-1.0.2.jar ^
+            --main-jar %MAIN_JAR% ^
             --main-class co.dekoderpy.guessthenumber.MainApplication ^
             --runtime-image custom-jre
+
 
       - name: Package app (macOS)
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
+          MAIN_JAR=$(ls target/GuessTheNumber-*.jar | head -n 1)
           jpackage \
             --type app-image \
             --input target \
             --name GuessTheNumber \
-            --main-jar GuessTheNumber-1.0.2.jar \
+            --main-jar "$(basename "$MAIN_JAR")" \
             --main-class co.dekoderpy.guessthenumber.MainApplication \
             --runtime-image custom-jre
+
 
       - name: Zip Windows App Folder
         if: matrix.os == 'windows-latest'
